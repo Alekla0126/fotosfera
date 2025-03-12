@@ -1,16 +1,79 @@
-# fotosfera
+# Fotosfera
 
-A new Flutter project.
+Fotosfera is a Flutter-based image browsing application with pagination, optimized image loading, and a smooth user experience. It uses Firebase for crash reporting, EasyLocalization for multi-language support, and GetIt for dependency injection.
 
-## Getting Started
+## Features
+- Fetches images with pagination support.
+- Displays optimal image variants based on screen size.
+- Supports image detail viewing with zoom capabilities.
+- Implements a robust architecture using BLoC for state management.
+- Uses Dio for API requests and CachedNetworkImage for optimized image loading.
+- Firebase Crashlytics for error tracking.
+- Multilingual support with EasyLocalization.
+- Navigation with GoRouter.
 
-This project is a starting point for a Flutter application.
+## Installation
+### Prerequisites
+- [Flutter](https://flutter.dev/docs/get-started/install)
+- Dart SDK
+- Firebase setup
 
-A few resources to get you started if this is your first Flutter project:
+### Steps
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/alekla0126/fotosfera.git
+   cd fotosfera
+   ```
+2. Install dependencies:
+   ```sh
+   flutter pub get
+   ```
+3. Configure Firebase:
+   - Ensure you have `google-services.json` (for Android) and `GoogleService-Info.plist` (for iOS) set up.
+   - Initialize Firebase in `main.dart`.
+4. Run the application:
+   ```sh
+   flutter run
+   ```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Project Structure
+```
+lib/
+├── di/                     # Dependency injection
+├── features/
+│   ├── job_evaluation/
+│   │   ├── data/           # Data layer (models, repositories, API calls)
+│   │   ├── domain/         # Business logic (use cases, entities)
+│   │   ├── presentation/   # UI layer (pages, widgets, BLoC)
+├── translations/           # Localization files
+├── main.dart               # Entry point
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Technologies Used
+- **State Management:** BLoC
+- **Networking:** Dio
+- **Dependency Injection:** GetIt
+- **Navigation:** GoRouter
+- **Localization:** EasyLocalization
+- **Crash Reporting:** Firebase Crashlytics
+- **Image Loading:** CachedNetworkImage
+
+## API
+Fotosfera fetches images from the following endpoint:
+```
+GET https://ru.api.dev.photograf.io/v1/jobEvaluation/images?continuationToken={token}
+```
+- `continuationToken` is used for pagination.
+
+## Testing
+Run unit tests using:
+```sh
+flutter test
+```
+
+## Author
+- **GitHub:** [alekla0126](https://github.com/alekla0126)
+- **Email:** [alekla0126@gmail.com](mailto:alekla0126@gmail.com)
+
+## License
+This project is licensed under the MIT License.
