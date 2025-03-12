@@ -1,0 +1,43 @@
+include: package:lint/analysis_options.yaml
+
+analyzer:
+  errors:
+    unused_import: warning
+    dead_code: warning
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "lib/generated/**"
+
+linter:
+  rules:
+    - prefer_const_constructors
+    - prefer_final_locals
+    - avoid_print
+    - prefer_single_quotes
+    - always_use_package_imports
+    - public_member_api_docs
+    - unnecessary_this
+    - avoid_empty_else
+    - prefer_relative_imports
+    - prefer_typing_uninitialized_variables
+    - avoid_void_async
+    - unnecessary_late
+    - sort_constructors_first
+
+dart_code_metrics:
+  anti-patterns:
+    - long-method
+    - long-parameter-list
+  metrics:
+    cyclomatic-complexity: 10
+    number-of-parameters: 4
+    source-lines-of-code: 50
+  metrics-exclude:
+    - test/**
+  rules:
+    - avoid-global-state
+    - avoid-nested-conditional-expressions
+    - avoid-non-null-assertion
+    - prefer-immediate-return
+    - no-magic-number

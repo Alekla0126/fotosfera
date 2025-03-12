@@ -1,0 +1,38 @@
+{
+  "app_title": "Fotosfera",
+  "welcome_message": "Welcome to Fotosfera!",
+  "error_message": "An error occurred. Please try again.",
+  
+  "images": {
+    "title": "Images",
+    "gallery_title": "Photo Gallery",
+    "empty_state": "No images found",
+    "actions": {
+      "upload": "Upload Image",
+      "download": "Download",
+      "share": "Share",
+      "delete": "Delete",
+      "edit": "Edit"
+    },
+    "details": {
+      "title": "Image Details",
+      "filename": "Filename",
+      "size": "Size",
+      "dimensions": "Dimensions",
+      "created_at": "Created",
+      "location": "Location",
+      "tags": "Tags",
+      "description": "Description"
+    },
+    "messages": {
+      "upload_success": "Image successfully uploaded",
+      "delete_confirm": "Are you sure you want to delete this image?",
+      "loading": "Loading images..."
+    },
+    "errors": {
+      "upload_failed": "Failed to upload image",
+      "not_found": "Image not found",
+      "invalid_format": "Invalid image format"
+    }
+  }
+}
