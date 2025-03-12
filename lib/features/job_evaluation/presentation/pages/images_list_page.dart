@@ -3,7 +3,10 @@ import '../../domain/entities/image_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import '../blocs/images_bloc.dart';
+
+final logger = Logger();
 
 class ImagesListPage extends StatefulWidget {
   const ImagesListPage({super.key});
@@ -26,10 +29,12 @@ class _ImagesListPageState extends State<ImagesListPage> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      // Reached the bottom => try to load more
-      context.read<ImagesBloc>().add(LoadMoreImages());
+    final bloc = context.read<ImagesBloc>();
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 100 &&
+        bloc.state.status != ImagesStatus.loadingMore &&
+        bloc.state.continuationToken != null) {
+      bloc.add(LoadMoreImages());
     }
   }
 
@@ -44,7 +49,9 @@ class _ImagesListPageState extends State<ImagesListPage> {
           if (state.status == ImagesStatus.loading && state.images.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (state.status == ImagesStatus.error && state.images.isEmpty && state.errorMessage != null) {
+          if (state.status == ImagesStatus.error &&
+              state.images.isEmpty &&
+              state.errorMessage != null) {
             return Center(child: Text('Error: ${state.errorMessage}'));
           }
           final images = state.images;
@@ -61,14 +68,14 @@ class _ImagesListPageState extends State<ImagesListPage> {
                   // Determine optimal variant for the given item size
                   // For simplicity, let's assume 120x120 is the approximate size of a grid item
                   final variant = _getOptimalImageVariant(
-                    image.variants, 
-                    desiredWidth: 120, 
+                    image.variants,
+                    desiredWidth: 120,
                     desiredHeight: 120,
                   );
                   return GestureDetector(
                     onTap: () {
                       // Navigate to detail screen
-                      GoRouter.of(context).go('/detail/${image.id}'); 
+                      GoRouter.of(context).go('/detail/${image.id}');
                     },
                     child: CachedNetworkImage(
                       imageUrl: variant.url,
@@ -109,7 +116,8 @@ class _ImagesListPageState extends State<ImagesListPage> {
       ..sort((a, b) => (a.width * a.height).compareTo(b.width * b.height));
 
     // 1) minimal bigger than desired
-    final bigger = sorted.where((v) => v.width >= desiredWidth && v.height >= desiredHeight);
+    final bigger = sorted
+        .where((v) => v.width >= desiredWidth && v.height >= desiredHeight);
     if (bigger.isNotEmpty) {
       return bigger.first; // The smallest from bigger ones
     } else {

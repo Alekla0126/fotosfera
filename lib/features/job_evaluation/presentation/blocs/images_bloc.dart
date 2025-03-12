@@ -35,7 +35,8 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(status: ImagesStatus.error, errorMessage: e.toString()));
+      emit(state.copyWith(
+          status: ImagesStatus.error, errorMessage: e.toString()));
     }
   }
 
@@ -43,7 +44,6 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
     LoadMoreImages event,
     Emitter<ImagesState> emit,
   ) async {
-    // If no continuationToken or already loadingMore, do nothing
     if (state.continuationToken == null ||
         state.status == ImagesStatus.loadingMore) {
       return;
@@ -51,26 +51,26 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
 
     emit(state.copyWith(status: ImagesStatus.loadingMore));
     try {
-      // Correctly call `_fetchImagesUseCase` with the named parameter
       final (newImages, newToken) = await _fetchImagesUseCase(
         continuationToken: state.continuationToken,
       );
 
-      final updatedList = List<ImageEntity>.from(state.images)..addAll(newImages);
-      emit(
-        state.copyWith(
-          images: updatedList,
-          continuationToken: newToken,
-          status: ImagesStatus.loaded,
-        ),
-      );
+      if (newImages.isEmpty) {
+        emit(state.copyWith(
+            status: ImagesStatus.loaded)); // No more images to load
+      } else {
+        emit(
+          state.copyWith(
+            images: List.of(state.images)..addAll(newImages),
+            continuationToken: newToken,
+            status: ImagesStatus.loaded,
+          ),
+        );
+      }
     } catch (e) {
-      emit(
-        state.copyWith(
-          status: ImagesStatus.error,
-          errorMessage: e.toString(),
-        ),
-      );
+      emit(state.copyWith(
+          status: ImagesStatus.error, errorMessage: e.toString()));
     }
   }
+  
 }

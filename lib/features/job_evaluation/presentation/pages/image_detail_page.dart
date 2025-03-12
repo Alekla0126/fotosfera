@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import '../blocs/images_bloc.dart';
 
-
 class ImageDetailPage extends StatelessWidget {
   const ImageDetailPage({
     super.key,
@@ -18,8 +17,10 @@ class ImageDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imagesBloc = context.read<ImagesBloc>();
-    final image = imagesBloc.state.images.firstWhere((img) => img.id == imageId,
-        orElse: () => throw Exception('Not Found'),);
+    final image = imagesBloc.state.images.firstWhere(
+      (img) => img.id == imageId,
+      orElse: () => throw Exception('Not Found'),
+    );
 
     // We can get the screen size to find the best variant:
     final size = MediaQuery.of(context).size;
@@ -48,7 +49,13 @@ class ImageDetailPage extends StatelessWidget {
           maxScale: 4,
           child: CachedNetworkImage(
             imageUrl: variant.url,
-            placeholder: (ctx, url) => const CircularProgressIndicator(),
+            placeholder: (ctx, url) => const SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
             errorWidget: (ctx, url, error) => const Icon(Icons.error),
             fit: BoxFit.contain,
           ),
