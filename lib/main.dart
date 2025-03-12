@@ -1,5 +1,5 @@
-import 'package:fotosfera/features/job_evaluation/presentation/pages/image_detail_page.dart';
-import 'package:fotosfera/features/job_evaluation/presentation/pages/images_list_page.dart';
+import 'package:fotosfera/features/job_evaluation/presentation/pages/image_detail_page.dart' as detail;
+import 'package:fotosfera/features/job_evaluation/presentation/pages/images_list_page.dart' as list;
 import 'package:fotosfera/features/job_evaluation/presentation/blocs/images_bloc.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -10,9 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-/// All initialization is done INSIDE runZonedGuarded,
-/// so WidgetsFlutterBinding.ensureInitialized(), Firebase.initializeApp(),
-/// and runApp() happen in the same zone.
+/// All initialization is done INSIDE runZonedGuarded
 void main() {
   runZonedGuarded(() async {
     /// 1) Initialize Flutter bindings
@@ -52,14 +50,13 @@ class MyApp extends StatelessWidget {
     routes: [
       GoRoute(
         path: '/images',
-        builder: (context, state) => const ImagesListPage(),
+        builder: (context, state) => const list.ImagesListPage(), // ✅ Use prefix 'list'
       ),
-      // Make detail top-level
       GoRoute(
         path: '/detail/:imageId',
         builder: (context, state) {
           final imageId = state.pathParameters['imageId']!;
-          return ImageDetailPage(imageId: imageId);
+          return detail.ImageDetailPage(imageId: imageId); // ✅ Use prefix 'detail'
         },
       ),
     ],
@@ -67,11 +64,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Provide the BLoC at top-level, so both list & detail can access it
     return BlocProvider<ImagesBloc>(
       create: (_) {
         final bloc = getIt<ImagesBloc>();
-        bloc.add(LoadImages()); // automatically load images on startup
+        bloc.add(LoadImages());
         return bloc;
       },
       child: MaterialApp.router(
