@@ -1,3 +1,4 @@
+import 'package:fotosfera/core/utils/logger.dart';
 import '../models/image_model.dart';
 import 'package:dio/dio.dart';
 
@@ -5,15 +6,18 @@ abstract class IRemoteDataSource {
   Future<(List<ImageModel>, String?)> fetchImages({String? continuationToken});
 }
 
-class RemoteDataSourceImpl implements IRemoteDataSource { // or final http.Client _client
+class RemoteDataSourceImpl implements IRemoteDataSource {
+  // or final http.Client _client
 
   RemoteDataSourceImpl(this._dio);
   final Dio _dio;
 
   @override
   Future<(List<ImageModel>, String?)> fetchImages(
-      {String? continuationToken,}) async {
+      {String? continuationToken}) async {
     try {
+      AppLogger.debug("Fetching images... Sending token: $continuationToken");
+
       final queryParameters = <String, dynamic>{};
       if (continuationToken != null) {
         queryParameters['continuationToken'] = continuationToken;
@@ -24,29 +28,22 @@ class RemoteDataSourceImpl implements IRemoteDataSource { // or final http.Clien
         queryParameters: queryParameters,
       );
 
-      // The actual JSON:
-      // {
-      //   "ok": true,
-      //   "result": {
-      //     "items": [...],
-      //     "continuationToken": "FAAAAKOgOBc..."
-      //   }
-      // }
-
       final data = response.data as Map<String, dynamic>;
-      // null-safely read "result"
       final result = data['result'] as Map<String, dynamic>? ?? {};
 
-      // "items" is the array of images
       final itemsJson = result['items'] as List<dynamic>? ?? [];
-      final token = result['continuationToken'] as String?;
+      final token =
+          result['continuationToken'] as String?; // Update token from response
 
       final images = itemsJson
           .map((json) => ImageModel.fromJson(json as Map<String, dynamic>))
           .toList();
 
-      return (images, token);
-    } on DioException {
+      AppLogger.debug("Received ${images.length} images. New token: $token");
+
+      return (images, token); // Return updated token
+    } on DioException catch (e, stackTrace) {
+      AppLogger.error("API Request Failed", e, stackTrace);
       rethrow;
     }
   }

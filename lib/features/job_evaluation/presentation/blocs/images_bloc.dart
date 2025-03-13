@@ -1,8 +1,8 @@
+import 'package:fotosfera/features/job_evaluation/domain/usecases/fetch_images_usecase.dart';
+import 'package:fotosfera/core/utils/logger.dart';
+import '../../domain/entities/image_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fotosfera/features/job_evaluation/domain/usecases/fetch_images_usecase.dart';
-import '../../domain/entities/image_entity.dart';
-
 part 'images_event.dart';
 part 'images_state.dart';
 
@@ -46,31 +46,42 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
   ) async {
     if (state.continuationToken == null ||
         state.status == ImagesStatus.loadingMore) {
+      AppLogger.debug(
+          "No more images to load. Current token: ${state.continuationToken}");
       return;
     }
 
+    AppLogger.debug(
+        "Loading more images... Current token: ${state.continuationToken}");
+
     emit(state.copyWith(status: ImagesStatus.loadingMore));
+
     try {
       final (newImages, newToken) = await _fetchImagesUseCase(
-        continuationToken: state.continuationToken,
+        continuationToken: state.continuationToken, // Pass the latest token
       );
 
-      if (newImages.isEmpty) {
-        emit(state.copyWith(
-            status: ImagesStatus.loaded)); // No more images to load
-      } else {
-        emit(
-          state.copyWith(
-            images: List.of(state.images)..addAll(newImages),
-            continuationToken: newToken,
-            status: ImagesStatus.loaded,
-          ),
-        );
-      }
-    } catch (e) {
-      emit(state.copyWith(
-          status: ImagesStatus.error, errorMessage: e.toString()));
+      final updatedList = List<ImageEntity>.from(state.images)
+        ..addAll(newImages);
+
+      AppLogger.debug(
+          "Loaded ${newImages.length} new images. New token: $newToken");
+
+      emit(
+        state.copyWith(
+          images: updatedList, // Append new images
+          continuationToken: newToken, // Update token for the next request
+          status: ImagesStatus.loaded,
+        ),
+      );
+    } catch (e, stackTrace) {
+      AppLogger.error("Failed to load more images", e, stackTrace);
+      emit(
+        state.copyWith(
+          status: ImagesStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
-  
 }
