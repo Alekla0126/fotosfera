@@ -2,6 +2,8 @@
 
 Fotosfera is a Flutter-based image browsing application with pagination, optimized image loading, and a smooth user experience. It uses Firebase for crash reporting, EasyLocalization for multi-language support, and GetIt for dependency injection.
 
+![Demo](assets/demo.gif)
+
 ## Features
 - Fetches images with pagination support.
 - Displays optimal image variants based on available screen size and container size.
