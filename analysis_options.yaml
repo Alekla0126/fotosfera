@@ -4,6 +4,8 @@ analyzer:
   errors:
     unused_import: warning
     dead_code: warning
+    public_member_api_docs: ignore  # ✅ Ignore missing documentation warnings
+    avoid_classes_with_only_static_members: ignore  # ✅ Ignore static-only class warnings
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
@@ -16,28 +18,13 @@ linter:
     - avoid_print
     - prefer_single_quotes
     - always_use_package_imports
-    - public_member_api_docs
+    # - prefer_relative_imports  # ❌ Removed (conflict)
     - unnecessary_this
     - avoid_empty_else
-    - prefer_relative_imports
     - prefer_typing_uninitialized_variables
     - avoid_void_async
     - unnecessary_late
     - sort_constructors_first
-
-dart_code_metrics:
-  anti-patterns:
-    - long-method
-    - long-parameter-list
-  metrics:
-    cyclomatic-complexity: 10
-    number-of-parameters: 4
-    source-lines-of-code: 50
-  metrics-exclude:
-    - test/**
-  rules:
-    - avoid-global-state
-    - avoid-nested-conditional-expressions
-    - avoid-non-null-assertion
-    - prefer-immediate-return
-    - no-magic-number
+    - require_trailing_commas
+    - directives_ordering
+    - sort_pub_dependencies

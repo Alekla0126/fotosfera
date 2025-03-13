@@ -1,6 +1,6 @@
-import 'package:fotosfera/core/utils/logger.dart';
-import '../models/image_model.dart';
 import 'package:dio/dio.dart';
+import 'package:fotosfera/core/utils/logger.dart';
+import 'package:fotosfera/features/job_evaluation/data/models/image_model.dart';
 
 abstract class IRemoteDataSource {
   Future<(List<ImageModel>, String?)> fetchImages({String? continuationToken});
@@ -13,10 +13,11 @@ class RemoteDataSourceImpl implements IRemoteDataSource {
   final Dio _dio;
 
   @override
-  Future<(List<ImageModel>, String?)> fetchImages(
-      {String? continuationToken}) async {
+  Future<(List<ImageModel>, String?)> fetchImages({
+    String? continuationToken,
+  }) async {
     try {
-      AppLogger.debug("Fetching images... Sending token: $continuationToken");
+      AppLogger.debug('Fetching images... Sending token: $continuationToken');
 
       final queryParameters = <String, dynamic>{};
       if (continuationToken != null) {
@@ -39,11 +40,11 @@ class RemoteDataSourceImpl implements IRemoteDataSource {
           .map((json) => ImageModel.fromJson(json as Map<String, dynamic>))
           .toList();
 
-      AppLogger.debug("Received ${images.length} images. New token: $token");
+      AppLogger.debug('Received ${images.length} images. New token: $token');
 
       return (images, token); // Return updated token
     } on DioException catch (e, stackTrace) {
-      AppLogger.error("API Request Failed", e, stackTrace);
+      AppLogger.error('API Request Failed', e, stackTrace);
       rethrow;
     }
   }

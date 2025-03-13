@@ -1,0 +1,35 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  analyze_format_test:
+    name: Lint, Format, and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.x"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run static analysis (Dart analyze)
+        run: flutter analyze || exit 1
+
+      - name: Run formatting check
+        run: dart format --output=none --set-exit-if-changed . || exit 1
+
+      - name: Run tests
+        run: flutter test || exit 1

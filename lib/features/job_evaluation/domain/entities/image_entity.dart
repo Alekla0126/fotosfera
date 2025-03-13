@@ -1,5 +1,4 @@
 class ImageEntity {
-  
   ImageEntity({
     required this.id,
     required this.description,
@@ -12,7 +11,6 @@ class ImageEntity {
 }
 
 class ImageVariantEntity {
-
   ImageVariantEntity({
     required this.width,
     required this.height,

@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:fotosfera/translations/locale_keys.dart';
-import '../../domain/entities/image_entity.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import '../blocs/images_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fotosfera/features/job_evaluation/domain/entities/image_entity.dart';
+import 'package:fotosfera/features/job_evaluation/presentation/blocs/images_bloc.dart';
+import 'package:fotosfera/translations/locale_keys.dart';
+import 'package:go_router/go_router.dart';
 
 class ImageDetailPage extends StatefulWidget {
   const ImageDetailPage({
@@ -21,10 +21,9 @@ class ImageDetailPage extends StatefulWidget {
 
 class _ImageDetailPageState extends State<ImageDetailPage>
     with SingleTickerProviderStateMixin {
-  final TransformationController _transformationController =
-      TransformationController();
+  late final TransformationController _transformationController;
   late AnimationController _animationController;
-  Animation<Matrix4>? _animation;
+  late Animation<Matrix4>? _animation;
   TapDownDetails? _doubleTapDetails;
 
   @override
@@ -83,9 +82,8 @@ class _ImageDetailPageState extends State<ImageDetailPage>
             transformationController: _transformationController,
             minScale: 1.0,
             maxScale: 5.0, // Allow up to 5x zoom like iPhone gallery
-            panEnabled: true, // Enable panning
             clipBehavior: Clip.none, // Prevents cropping
-            child: Container(
+            child: ColoredBox(
               color: Colors.white, // Set background to white
               child: CachedNetworkImage(
                 imageUrl: variant.url,
@@ -107,7 +105,7 @@ class _ImageDetailPageState extends State<ImageDetailPage>
     if (_doubleTapDetails == null) return;
 
     final position = _doubleTapDetails!.localPosition;
-    final scaleFactor = 3.0; // Zoom to 3x
+    const scaleFactor = 3.0; // Zoom to 3x
 
     // Reset to normal if already zoomed in
     if (_transformationController.value != Matrix4.identity()) {
@@ -122,10 +120,12 @@ class _ImageDetailPageState extends State<ImageDetailPage>
     _animation = Matrix4Tween(
       begin: _transformationController.value,
       end: Matrix4.identity(),
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOut,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOut,
+      ),
+    );
     _animationController.forward(from: 0);
   }
 
@@ -140,10 +140,12 @@ class _ImageDetailPageState extends State<ImageDetailPage>
     _animation = Matrix4Tween(
       begin: _transformationController.value,
       end: zoomMatrix,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOut,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOut,
+      ),
+    );
     _animationController.forward(from: 0);
   }
 

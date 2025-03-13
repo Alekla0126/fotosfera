@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fotosfera/core/utils/logger.dart';
-import '../../domain/entities/image_entity.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fotosfera/core/utils/logger.dart';
+import 'package:fotosfera/features/job_evaluation/domain/entities/image_entity.dart';
+import 'package:fotosfera/features/job_evaluation/presentation/blocs/images_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
-import '../blocs/images_bloc.dart';
 
 final logger = Logger();
 
@@ -39,7 +39,9 @@ class _ImagesListPageState extends State<ImagesListPage> {
             _scrollController.position.maxScrollExtent - 100 &&
         bloc.state.status != ImagesStatus.loadingMore &&
         bloc.state.continuationToken != null) {
-      AppLogger.debug("Loading more images with token: ${bloc.state.continuationToken}");
+      AppLogger.debug(
+        'Loading more images with token: ${bloc.state.continuationToken}',
+      );
       bloc.add(LoadMoreImages());
     }
   }
@@ -62,18 +64,20 @@ class _ImagesListPageState extends State<ImagesListPage> {
           final images = state.images;
           return LayoutBuilder(
             builder: (context, constraints) {
-              final crossAxisCount = 3;
-              final spacing = 8.0;
+              const crossAxisCount = 3;
+              const spacing = 8.0;
               final containerSize =
                   (constraints.maxWidth - ((crossAxisCount - 1) * spacing)) /
                       crossAxisCount;
 
               return GridView.builder(
-                key: const PageStorageKey<String>('imagesGrid'), // 🔥 Keeps scroll position alive
+                key: const PageStorageKey<String>(
+                  'imagesGrid',
+                ), // 🔥 Keeps scroll position alive
                 controller: _scrollController,
                 itemCount: images.length,
                 padding: const EdgeInsets.all(8.0),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: crossAxisCount,
                   crossAxisSpacing: spacing,
                   mainAxisSpacing: spacing,
@@ -96,8 +100,7 @@ class _ImagesListPageState extends State<ImagesListPage> {
                       cacheKey: image.id,
                       placeholder: (ctx, url) =>
                           const Center(child: CircularProgressIndicator()),
-                      errorWidget: (ctx, url, error) =>
-                          const Icon(Icons.error),
+                      errorWidget: (ctx, url, error) => const Icon(Icons.error),
                       fit: BoxFit.cover,
                     ),
                   );
@@ -119,7 +122,8 @@ class _ImagesListPageState extends State<ImagesListPage> {
     final sorted = variants.toList()
       ..sort((a, b) => (a.width * a.height).compareTo(b.width * b.height));
 
-    final bigger = sorted.where((v) => v.width >= desiredWidth && v.height >= desiredHeight);
+    final bigger = sorted
+        .where((v) => v.width >= desiredWidth && v.height >= desiredHeight);
     return bigger.isNotEmpty ? bigger.first : sorted.last;
   }
 }

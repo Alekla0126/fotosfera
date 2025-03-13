@@ -1,7 +1,6 @@
-import '../../domain/entities/image_entity.dart';
+import 'package:fotosfera/features/job_evaluation/domain/entities/image_entity.dart';
 
 class ImageModel {
-
   ImageModel({
     required this.id,
     required this.description,
@@ -33,7 +32,6 @@ class ImageModel {
 }
 
 class ImageVariantModel {
-
   ImageVariantModel({
     required this.width,
     required this.height,

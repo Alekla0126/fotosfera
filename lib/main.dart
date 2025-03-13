@@ -1,14 +1,17 @@
-import 'package:fotosfera/features/job_evaluation/presentation/pages/image_detail_page.dart' as detail;
-import 'package:fotosfera/features/job_evaluation/presentation/pages/images_list_page.dart' as list;
-import 'package:fotosfera/features/job_evaluation/presentation/blocs/images_bloc.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:fotosfera/di/service_locator.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fotosfera/di/service_locator.dart';
+import 'package:fotosfera/features/job_evaluation/presentation/blocs/images_bloc.dart';
+import 'package:fotosfera/features/job_evaluation/presentation/pages/image_detail_page.dart'
+    as detail;
+import 'package:fotosfera/features/job_evaluation/presentation/pages/images_list_page.dart'
+    as list;
+import 'package:go_router/go_router.dart';
 
 /// All initialization is done INSIDE runZonedGuarded
 void main() {
@@ -50,13 +53,16 @@ class MyApp extends StatelessWidget {
     routes: [
       GoRoute(
         path: '/images',
-        builder: (context, state) => const list.ImagesListPage(), // ✅ Use prefix 'list'
+        builder: (context, state) =>
+            const list.ImagesListPage(), // ✅ Use prefix 'list'
       ),
       GoRoute(
         path: '/detail/:imageId',
         builder: (context, state) {
           final imageId = state.pathParameters['imageId']!;
-          return detail.ImageDetailPage(imageId: imageId); // ✅ Use prefix 'detail'
+          return detail.ImageDetailPage(
+            imageId: imageId,
+          ); // ✅ Use prefix 'detail'
         },
       ),
     ],
