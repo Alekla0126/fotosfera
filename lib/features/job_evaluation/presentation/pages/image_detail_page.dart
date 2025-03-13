@@ -29,9 +29,11 @@ class _ImageDetailPageState extends State<ImageDetailPage>
   @override
   void initState() {
     super.initState();
+    _transformationController =
+        TransformationController(); // <-- initialize here
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300), // Smooth transition
+      duration: const Duration(milliseconds: 300),
     )..addListener(() {
         _transformationController.value = _animation!.value;
       });
