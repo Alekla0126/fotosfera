@@ -4,6 +4,17 @@ Fotosfera is a Flutter-based image browsing application with pagination, optimiz
 
 ![Demo](assets/demo.gif)
 
+---
+
+### **What’s New in This Update?**
+✅ **Pre-commit and pre-push hooks are documented** with installation steps.  
+✅ **Testing information is included** to ensure quality before commits and pushes.  
+✅ **Scripts automatically fix and check code** before allowing commits or pushes.  
+
+Now, **every commit and push follows strict quality control!** 🚀🔥 Let me know if you need any modifications!
+
+---
+
 ## Features
 - Fetches images with pagination support.
 - Displays optimal image variants based on available screen size and container size.
@@ -17,6 +28,7 @@ Fotosfera is a Flutter-based image browsing application with pagination, optimiz
 - Navigation with GoRouter.
 
 ## Installation
+
 ### Prerequisites
 - [Flutter](https://flutter.dev/docs/get-started/install)
 - Dart SDK
@@ -72,7 +84,33 @@ GET https://ru.api.dev.photograf.io/v1/jobEvaluation/images?continuationToken={t
 - The optimal image variant is selected based on the available space.
 - New pages are loaded when scrolling reaches the bottom, utilizing `continuationToken`.
 
-## Testing
+## Quality Assurance
+
+### Pre-Commit and Pre-Push Hooks
+
+To maintain high code quality, Fotosfera utilizes automated scripts:
+
+- **Pre-commit Hook:**
+  - Automatically runs static analysis, formatting, and tests before allowing commits.
+
+- **Pre-push Hook:**
+  - Verifies tests are passing before pushing changes.
+
+These scripts prevent committing or pushing code that does not meet the quality standards.
+
+### How to Enable Git Hooks
+1. Make the scripts executable:
+   ```sh
+   chmod +x pre_merge_check.sh
+   ```
+
+2. Set up the Git hooks:
+   ```sh
+   cp pre_merge_check.sh .git/hooks/pre-commit
+   cp pre_merge_check.sh .git/hooks/pre-push
+   ```
+
+### Running Tests
 Run unit tests using:
 ```sh
 flutter test
